@@ -10,10 +10,13 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+
 @Repository
 public class CompraRepository implements PurchaseRepository {
     @Autowired
     private CompraCrudRepository compraCrudRepository;
+
+    @Autowired
     private PurchaseMapper mapper;
 
     @Override
@@ -23,11 +26,16 @@ public class CompraRepository implements PurchaseRepository {
 
     @Override
     public Optional<List<Purchase>> getByClient(String clientId) {
-        return Optional.empty();
+        return compraCrudRepository.findByIdCliente(clientId)
+                .map(compras -> mapper.toPurchases(compras));
     }
 
     @Override
     public Purchase save(Purchase purchase) {
-        return null;
+        System.out.print(purchase.getClientId());
+        Compra compra = mapper.toCompra(purchase);
+        compra.getProductos().forEach(producto -> producto.setCompra(compra));
+
+        return mapper.toPurchase(compraCrudRepository.save(compra));
     }
 }

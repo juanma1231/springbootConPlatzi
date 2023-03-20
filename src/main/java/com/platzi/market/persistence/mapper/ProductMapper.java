@@ -10,7 +10,7 @@ import org.w3c.dom.ls.LSException;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring",uses={CategoryMapper.class})
+@Mapper(componentModel = "spring", uses = {CategoryMapper.class})
 public interface ProductMapper {
     @Mappings({
             @Mapping(source = "idProducto", target = "productId"),
@@ -18,14 +18,16 @@ public interface ProductMapper {
             @Mapping(source = "idCategoria", target = "categoryId"),
             @Mapping(source = "precioVenta", target = "price"),
             @Mapping(source = "cantidadStock", target = "stock"),
-            @Mapping(source = "estado", target = "active"),
+            @Mapping(target = "active", ignore = true),
             @Mapping(source = "categoria", target = "category"),
-
-
     })
     Product toProduct(Producto producto);
     List<Product> toProducts(List<Producto> productos);
+
     @InheritInverseConfiguration
-    @Mapping(target = "codigoBarras", ignore = true)
+    @Mappings({
+            @Mapping(target = "codigoBarras", ignore = true),
+            @Mapping(target = "estado",ignore = true)
+    } )
     Producto toProducto(Product product);
 }
