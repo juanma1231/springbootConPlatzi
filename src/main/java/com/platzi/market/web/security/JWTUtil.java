@@ -27,6 +27,10 @@ public class JWTUtil {
     public boolean validateToken(String token, UserDetails userDetails) {
         return userDetails.getUsername().equals(extractUsername(token)) && !isTokenExpired(token);
     }
+    private Claims getClaims(String token) {
+
+        return Jwts.parser().setSigningKey(KEY).parseClaimsJws(token).getBody();
+    }
 
     public String extractUsername(String token) {
         return getClaims(token).getSubject();
@@ -36,7 +40,5 @@ public class JWTUtil {
         return getClaims(token).getExpiration().before(new Date());
     }
 
-    private Claims getClaims(String token) {
-        return Jwts.parser().setSigningKey(KEY).parseClaimsJws(token).getBody();
-    }
+
 }
